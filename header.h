@@ -13,12 +13,12 @@ class grammar
 public:
 	string left;
 	vector<vector<string> > right;
-//	bool epsilon();
+	bool epsilon();
 	grammar(){}
 	grammar(string s){left=s;}
 	~grammar(){}
 };
-/*
+
 bool grammar::epsilon()
 {
 	 vector<string>::iterator result;
@@ -29,7 +29,7 @@ bool grammar::epsilon()
 		return true;
 	 }
 	return false;
-}*/
+}
 
 
 	map<string,int>dic;
