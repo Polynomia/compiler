@@ -12,24 +12,24 @@ class grammar
 {
 public:
 	string left;
-	vector<set<string> > right;
-	bool epsilon();
+	vector<vector<string> > right;
+//	bool epsilon();
 	grammar(){}
 	grammar(string s){left=s;}
 	~grammar(){}
 };
-
+/*
 bool grammar::epsilon()
 {
-	 set<string>::iterator result;
+	 vector<string>::iterator result;
 	int i;
 	for(i=0;i<right.size();i++){
-	result=right[i].find("#");
+	result=find(right[i].begin(),right[i].end(),"#");
 	if (result!=right[i].end())
 		return true;
 	 }
 	return false;
-}
+}*/
 
 
 	map<string,int>dic;
@@ -37,7 +37,7 @@ bool grammar::epsilon()
 void readtxt(){	
 	ifstream ifile;
 	ifile.open("input.txt");
-	set<string> right1;
+	vector<string> right1;
 	string str,s,s2;
 	char line[512];
 	int size,i,num,j;
@@ -62,7 +62,7 @@ void readtxt(){
 		vnset[num].right.push_back(right1);
 		for(;i<size;i++){
 			if(str[i]=='|') {
-				if(x) vnset[num].right[j].insert(s2);
+				if(x) vnset[num].right[j].push_back(s2);
 				s2.clear();right1.clear();j++;
 				vnset[num].right.push_back(right1);
 				continue;}
@@ -72,10 +72,10 @@ void readtxt(){
 			x=1;
 			s2+=str[i];
 				if(isblank(str[i+1])) 
-			{vnset[num].right[j].insert(s2);
+			{vnset[num].right[j].push_back(s2);
 				x=0;}
 		}
-		vnset[num].right[j].insert(s2);
+		vnset[num].right[j].push_back(s2);
 		s2.clear();
 		right1.clear();
 		s.clear();
