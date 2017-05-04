@@ -1,3 +1,5 @@
-ACH ->dicf ADH asd s |sdas|#
-asdy->asduh asdi s |#
-asch->a |e'|#|sad
+E ->T E'
+E'->+ T E'|#
+T->F T'
+T'->* F T' |#
+F->( E ) | id 

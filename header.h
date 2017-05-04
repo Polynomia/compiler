@@ -13,6 +13,7 @@ class grammar
 public:
 	string left;
 	vector<vector<string> > right;
+	set<string> first;
 	bool epsilon();
 	grammar(){}
 	grammar(string s){left=s;}
