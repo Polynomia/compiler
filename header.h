@@ -7,7 +7,7 @@
 #include <algorithm>
 #include<set>
 using namespace std;
-
+//*******************define the grammar class******************
 class grammar
 {
 public:
@@ -52,9 +52,11 @@ void grammar::delete_e()
 	return;
 }
 
+//*****************end define class************************
+	map<string,int>dic;//dictionary change string to int
+	vector<grammar>vnset;//vector of nonterminal grammars
 
-	map<string,int>dic;
-	vector<grammar>vnset;
+//***************read in the txt***************************
 void readtxt(){	
 	ifstream ifile;
 	ifile.open("input.txt");
@@ -102,7 +104,7 @@ void readtxt(){
 		s.clear();
 }}
 
-
+//************************get the first set of input***************
 
 void find_first(int a)
 {
@@ -129,4 +131,49 @@ void first(){
 	int i;
 	for(i=0;i<vnset.size();i++)
 		find_first(i);	
+}
+
+//*****************get the follow set of input*******************
+
+void find_follow(int a)
+{
+	int i,j,num;
+	vnset[a].follow.insert("$");
+	vector<string>::iterator it,it1;
+	string s=vnset[a].left;
+	for(i=0;i<vnset.size();i++){
+		for(j=0;j<vnset[i].right.size();j++){
+			it=find(vnset[i].right[j].begin(),vnset[i].right[j].end(),s);
+			if(it==vnset[i].right[j].end())continue;
+			else {
+				for(;it!=vnset[i].right[j].end();it++){	
+				if(it==vnset[i].right[j].end()-1) {
+					if(s==vnset[i].left) break;
+					find_follow(i);
+					vnset[a].follow.insert(vnset[i].follow.begin(),vnset[i].follow.end());break;}
+				else{	
+					it1=it+1;
+					num=dic[*it1];
+					if(!dic[*it1])	{vnset[a].follow.insert(*it1);break;}
+					vnset[a].follow.insert(vnset[num].first.begin(),vnset[num].first.end());
+					if(!vnset[num].first_e()){break;}
+					else if(it1++==vnset[i].right[j].end())
+						{find_follow(i);
+					 	vnset[a].follow.insert(vnset[i].follow.begin(),vnset[i].follow.end()); break; }
+						else {continue;}
+			}}
+			}
+		}
+	}
+}
+
+void follow()
+{
+	int i;
+	for(i=0;i<vnset.size();i++){
+		find_follow(i);
+		vnset[a].delete_e();
+	}
+}
+
 }
