@@ -172,8 +172,8 @@ void follow()
 	int i;
 	for(i=0;i<vnset.size();i++){
 		find_follow(i);
-		vnset[a].delete_e();
+		vnset[i].delete_e();
 	}
 }
 
-}
+
