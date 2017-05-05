@@ -14,7 +14,10 @@ public:
 	string left;
 	vector<vector<string> > right;
 	set<string> first;
+	set<string> follow;
 	bool epsilon();
+	bool first_e();
+	void delete_e();
 	grammar(){}
 	grammar(string s){left=s;}
 	~grammar(){}
@@ -30,6 +33,23 @@ bool grammar::epsilon()
 		return true;
 	 }
 	return false;
+}
+
+bool grammar::first_e()
+{
+	set<string>::iterator it;
+	it=first.find("#");
+	if(it!=first.end()) return true;
+	else return false;
+}
+
+void grammar::delete_e()
+{
+	set<string>::iterator it;
+	it=follow.find("#");
+	if(it==follow.end())return;
+	follow.erase(it);
+	return;
 }
 
 
@@ -82,3 +102,31 @@ void readtxt(){
 		s.clear();
 }}
 
+
+
+void find_first(int a)
+{
+	int i,j,size,num;
+	vector<string>::iterator it;
+	for(j=0;j<vnset[a].right.size();j++){
+		it=vnset[a].right[j].begin();
+		for(;it!=vnset[a].right[j].end();it++){
+			if(!dic[*it]) {vnset[a].first.insert(*it);break;}
+			else {
+				num=dic[*it];
+				if(!vnset[num].epsilon()){
+					find_first(num);
+					vnset[a].first.insert(vnset[num].first.begin(),vnset[num].first.end());break;}
+				else {continue;}
+			}
+		}
+	}
+	
+}
+
+
+void first(){
+	int i;
+	for(i=0;i<vnset.size();i++)
+		find_first(i);	
+}
