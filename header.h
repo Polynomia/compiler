@@ -56,7 +56,7 @@ void grammar::delete_e()
 //*****************end define class************************
 	map<string,int>dic;//dictionary change string to int
 	vector<grammar>vnset;//vector of nonterminal grammars
-	vector<string>vtset;
+	vector<string>vtset;//to store the vtset
 //***************read in the txt***************************
 void readtxt(){	
 	ifstream ifile;
@@ -242,7 +242,48 @@ void follow()
 	int i;
 	for(i=0;i<vnset.size();i++){
 		find_follow(i);
+	}
+	for(i=0;i<vnset.size();i++){
 		vnset[i].delete_e();
+	}
+}
+
+//*********************print first and follow set*******************//
+
+void print_first()
+{
+	cout<<"******************first set*******************"<<endl;
+	int i,j,size;
+	set<string>::iterator it,it1;
+	for(i=0;i<vnset.size();i++){
+		cout<<"FIRST("<<vnset[i].left<<")={";
+		it=vnset[i].first.begin();
+		for(;it!=(vnset[i].first.end());it++){
+			it1=++it;
+			it--;
+			cout<<*it;
+			if(it1!=vnset[i].first.end())cout<<",";
+		}
+		cout<<"}"<<endl;
+	}
+}
+
+
+void print_follow()
+{
+	cout<<"******************follow set*******************"<<endl;
+	int i,j,size;
+	set<string>::iterator it,it1;
+	for(i=0;i<vnset.size();i++){
+		cout<<"FOLLOW("<<vnset[i].left<<")={";
+		it=vnset[i].follow.begin();
+		for(;it!=(vnset[i].follow.end());it++){
+			it1=++it;
+			it--;
+			cout<<*it;
+			if(it1!=vnset[i].follow.end())cout<<",";
+		}
+		cout<<"}"<<endl;
 	}
 }
 
