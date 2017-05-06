@@ -15,6 +15,7 @@ public:
 	vector<vector<string> > right;
 	set<string> first;
 	set<string> follow;
+	map<string, int>select;	
 	bool epsilon();
 	bool first_e();
 	void delete_e();
@@ -55,7 +56,7 @@ void grammar::delete_e()
 //*****************end define class************************
 	map<string,int>dic;//dictionary change string to int
 	vector<grammar>vnset;//vector of nonterminal grammars
-
+	vector<string>vtset;
 //***************read in the txt***************************
 void readtxt(){	
 	ifstream ifile;
@@ -85,7 +86,8 @@ void readtxt(){
 		vnset[num].right.push_back(right1);
 		for(;i<size;i++){
 			if(str[i]=='|') {
-				if(x) vnset[num].right[j].push_back(s2);
+				if(x){ 
+				vnset[num].right[j].push_back(s2);}
 				s2.clear();right1.clear();j++;
 				vnset[num].right.push_back(right1);
 				continue;}
@@ -104,9 +106,51 @@ void readtxt(){
 		s.clear();
 }}
 
+//**************************find vtset******************************//
+bool isvn(string s)
+{
+	int i;
+	for(i=0;i<vnset.size();i++){
+		if(s==vnset[i].left) return true;}
+	return false;
+}
+void delete_e()
+{
+	vector<string>::iterator it;
+	it=find(vtset.begin(),vtset.end(),"#");
+	vtset.erase(it);
+	return;
+}
+
+void get_vt()
+{
+	int i,j,k;
+	vector<string>::iterator it,it1;
+	for(i=0;i<vnset.size();i++){
+		for(j=0;j<vnset[i].right.size();j++){
+			it=vnset[i].right[j].begin();
+			for(;it!=vnset[i].right[j].end();it++){
+				if(isvn(*it))continue;
+				else{
+					it1=find(vtset.begin(),vtset.end(),*it);
+					if(it1==vtset.end()) vtset.push_back(*it);
+					else continue;
+				}
+			}
+		}
+	}
+}
+
+void forTable()
+{
+	get_vt();
+	delete_e();
+}
+
+
 //************************get the first set of input***************
 
-void find_first(int a)
+/*void find_first(int a)
 {
 	int i,j,size,num;
 	vector<string>::iterator it;
@@ -124,8 +168,34 @@ void find_first(int a)
 		}
 	}
 	
-}
+}*/
 
+
+void find_first(int a)
+{
+	int i,j,size,num;
+	set<string>::iterator it1;
+	vector<string>::iterator it;
+	for(j=0;j<vnset[a].right.size();j++){
+		it=vnset[a].right[j].begin();
+		for(;it!=vnset[a].right[j].end();it++){
+			if(!dic[*it]) {vnset[a].first.insert(*it);
+				if(!vnset[a].select[*it]) vnset[a].select[*it]=j; 
+				 break;}
+			else {
+				num=dic[*it];
+				if(!vnset[num].epsilon()){
+					find_first(num);
+					vnset[a].first.insert(vnset[num].first.begin(),vnset[num].first.end());
+					for(it1=vnset[num].first.begin();it1!=vnset[num].first.end();it1++)			
+					if(!vnset[a].select[*it1]) vnset[a].select[*it1]=j;
+					break;}
+				else {continue;}
+			}
+		}
+	}
+	
+}
 
 void first(){
 	int i;
