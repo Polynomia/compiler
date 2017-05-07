@@ -1,3 +1,4 @@
+#include<iomanip>
 #include <map>
 #include<ctype.h>
 #include <fstream>
@@ -18,6 +19,7 @@ public:
 	map<string, int>select;	
 	bool epsilon();
 	bool first_e();
+	bool isFollow(string s);
 	void delete_e();
 	grammar(){}
 	grammar(string s){left=s;}
@@ -42,6 +44,14 @@ bool grammar::first_e()
 	it=first.find("#");
 	if(it!=first.end()) return true;
 	else return false;
+}
+
+bool grammar::isFollow(string s)
+{
+	set<string>::iterator it;
+	it=follow.find(s);
+	if(it==follow.end()) return false;
+	else return true;
 }
 
 void grammar::delete_e()
@@ -75,9 +85,9 @@ void readtxt(){
 		}
 		if(!dic[s]){
 			vnset.push_back(s);
-			dic[s]=vnset.size()-1;
+			dic[s]=vnset.size();
 		}
-		num=dic[s];
+		num=dic[s]-1;
 		j=0;
 		int x=1;
 		while(true){
@@ -145,6 +155,7 @@ void forTable()
 {
 	get_vt();
 	delete_e();
+	vtset.push_back("$");
 }
 
 
@@ -180,17 +191,21 @@ void find_first(int a)
 		it=vnset[a].right[j].begin();
 		for(;it!=vnset[a].right[j].end();it++){
 			if(!dic[*it]) {vnset[a].first.insert(*it);
-				if(!vnset[a].select[*it]) vnset[a].select[*it]=j; 
+				if(!vnset[a].select[*it]) vnset[a].select[*it]=j+1; 
 				 break;}
 			else {
-				num=dic[*it];
+				num=dic[*it]-1;
 				if(!vnset[num].epsilon()){
 					find_first(num);
 					vnset[a].first.insert(vnset[num].first.begin(),vnset[num].first.end());
 					for(it1=vnset[num].first.begin();it1!=vnset[num].first.end();it1++)			
-					if(!vnset[a].select[*it1]) vnset[a].select[*it1]=j;
+					if(!vnset[a].select[*it1]) vnset[a].select[*it1]=j+1;
 					break;}
-				else {continue;}
+				else {
+					vnset[a].first.insert(vnset[num].first.begin(),vnset[num].first.end());
+					for(it1=vnset[num].first.begin();it1!=vnset[num].first.end();it1++)			
+					if(!vnset[a].select[*it1]) vnset[a].select[*it1]=j+1;
+					continue;}
 			}
 		}
 	}
@@ -223,7 +238,7 @@ void find_follow(int a)
 					vnset[a].follow.insert(vnset[i].follow.begin(),vnset[i].follow.end());break;}
 				else{	
 					it1=it+1;
-					num=dic[*it1];
+					num=dic[*it1]-1;
 					if(!dic[*it1])	{vnset[a].follow.insert(*it1);break;}
 					vnset[a].follow.insert(vnset[num].first.begin(),vnset[num].first.end());
 					if(!vnset[num].first_e()){break;}
