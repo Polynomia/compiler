@@ -161,27 +161,6 @@ void forTable()
 
 //************************get the first set of input***************
 
-/*void find_first(int a)
-{
-	int i,j,size,num;
-	vector<string>::iterator it;
-	for(j=0;j<vnset[a].right.size();j++){
-		it=vnset[a].right[j].begin();
-		for(;it!=vnset[a].right[j].end();it++){
-			if(!dic[*it]) {vnset[a].first.insert(*it);break;}
-			else {
-				num=dic[*it];
-				if(!vnset[num].epsilon()){
-					find_first(num);
-					vnset[a].first.insert(vnset[num].first.begin(),vnset[num].first.end());break;}
-				else {continue;}
-			}
-		}
-	}
-	
-}*/
-
-
 void find_first(int a)
 {
 	int i,j,size,num;
@@ -302,4 +281,51 @@ void print_follow()
 	}
 }
 
-
+//********************print the table*********************************//
+void print_table(int WIDTH)
+{
+	cout<<"************************parsing table************************"<<endl;
+	int i,j,num,length,k;
+	string str;
+	vector<string>::iterator it;
+	cout<<left;
+	cout<<setw(10)<<" ";
+	for(i=0;i<vtset.size();i++){
+		cout<<setw(WIDTH)<<vtset[i];}
+	cout<<endl;
+	for(i=0;i<vnset.size();i++){
+		cout<<setw(WIDTH/2)<<vnset[i].left;
+		for(j=0;j<vtset.size();j++){
+			length=0;
+			if(!vnset[i].select[vtset[j]]) {
+				if(vnset[i].select["#"]){
+					k=vnset[i].select["#"]-1;
+					if(vnset[i].isFollow(vtset[j])){
+					it=vnset[i].right[k].begin();
+					cout<<vnset[i].left;
+					length+=vnset[i].left.length();
+					cout<<"->";
+					length+=2;
+					for(;it!=vnset[i].right[k].end();it++){
+ 	                 	cout<<*it<<" ";
+    	              	length+=(*it).length();
+        	          	length++;
+            	  	} }
+				}
+			}
+			else{	
+			num=vnset[i].select[vtset[j]]-1;
+			cout<<vnset[i].left<<"->";
+			length+=2;
+			it=vnset[i].right[num].begin();
+			length+=vnset[i].left.length();
+			for(;it!=vnset[i].right[num].end();it++){
+				cout<<*it<<" ";
+				length+=(*it).length();
+				length++;}
+			}			
+			cout<<setw(WIDTH-length)<<" ";
+		}
+		cout<<endl;
+	}
+}
