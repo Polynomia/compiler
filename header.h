@@ -289,7 +289,7 @@ void print_table(int WIDTH)
 	string str;
 	vector<string>::iterator it;
 	cout<<left;
-	cout<<setw(10)<<" ";
+	cout<<setw(WIDTH/2)<<" ";
 	for(i=0;i<vtset.size();i++){
 		cout<<setw(WIDTH)<<vtset[i];}
 	cout<<endl;
