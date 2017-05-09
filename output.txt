@@ -1,0 +1,19 @@
+******************first set*******************
+FIRST(E)={(,id}
+FIRST(E')={#,+}
+FIRST(T)={(,id}
+FIRST(T')={#,*}
+FIRST(F)={(,id}
+******************follow set*******************
+FOLLOW(E)={$,)}
+FOLLOW(E')={$,)}
+FOLLOW(T)={$,),+}
+FOLLOW(T')={$,),+}
+FOLLOW(F)={$,),*,+}
+************************parsing table************************
+          +                   *                   (                   )                   id                  $                   
+E                                                 E->T E'                                 E->T E'                                 
+E'        E'->+ T E'                                                  E'->#                                   E'->#               
+T                                                 T->F T'                                 T->F T'                                 
+T'        T'->#               T'->* F T'                              T'->#                                   T'->#               
+F                                                 F->( E )                                F->id                                   
