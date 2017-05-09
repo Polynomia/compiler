@@ -6,8 +6,9 @@ int main()
 	first();
 	follow();
 	forTable();
+	freopen("output.txt","w",stdout);
 	print_first();
 	print_follow();
 	print_table(20);
-	return 0;
+return 0;	
 }
